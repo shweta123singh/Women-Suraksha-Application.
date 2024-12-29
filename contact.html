@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Contacts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .container h1 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .container button:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .message.error {
+            color: red;
+        }
+
+        .message.success {
+            color: green;
+        }
+
+        .contacts-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .contacts-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .contacts-list li {
+            padding: 5px 0;
+            font-size: 0.9em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Emergency Contacts</h1>
+        <form id="contactForm">
+            <input type="text" id="contactName" placeholder="Enter contact name" required>
+            <input type="tel" id="contactNumber" placeholder="Enter contact number" required>
+            <button type="button" onclick="addContact()">Add Contact</button>
+        </form>
+        <div id="message" class="message"></div>
+
+        <div class="contacts-list" id="contactsList">
+            <h2>Saved Contacts</h2>
+            <ul id="contactListItems"></ul>
+        </div>
+    </div>
+
+    <script>
+        const contacts = [];
+
+        function addContact() {
+            const name = document.getElementById('contactName').value.trim();
+            const number = document.getElementById('contactNumber').value.trim();
+            const messageDiv = document.getElementById('message');
+
+            // Validate name: only characters and spaces allowed
+            if (!/^[a-zA-Z ]+$/.test(name)) {
+                messageDiv.textContent = 'Name must only contain letters and spaces.';
+                messageDiv.className = 'message error';
+                return;
+            }
+
+            // Validate number: only 10 digits allowed
+            if (!/^\d{10}$/.test(number)) {
+                messageDiv.textContent = 'Number must be exactly 10 digits.';
+                messageDiv.className = 'message error';
+                return;
+            }
+
+            if (contacts.length >= 5) {
+                messageDiv.textContent = 'You can only add up to 5 emergency contacts.';
+                messageDiv.className = 'message error';
+                return;
+            }
+
+            contacts.push({ name, number });
+
+            messageDiv.textContent = 'Contact added successfully!';
+            messageDiv.className = 'message success';
+
+            document.getElementById('contactName').value = '';
+            document.getElementById('contactNumber').value = '';
+
+            renderContacts();
+        }
+
+        function renderContacts() {
+            const contactListItems = document.getElementById('contactListItems');
+            contactListItems.innerHTML = '';
+
+            contacts.forEach((contact, index) => {
+                const li = document.createElement('li');
+                li.textContent = `${index + 1}. ${contact.name} - ${contact.number}`;
+                contactListItems.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
